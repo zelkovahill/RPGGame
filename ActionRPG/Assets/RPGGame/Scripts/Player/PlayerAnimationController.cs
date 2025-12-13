@@ -24,5 +24,10 @@ namespace RPGGame
 
             _refAnimator.SetInteger("State", (int)newState);
         }
+
+        public void OnLanding()
+        {
+            _refAnimator.SetTrigger("Landing");
+        }
     }
 }

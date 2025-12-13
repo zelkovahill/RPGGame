@@ -8,6 +8,8 @@ namespace RPGGame
         protected Transform _refTransform;
         protected CharacterController _characterController;
         protected Animator _refAnimator;
+        protected PlayerStateManager _manager;
+        protected PlayerAnimationController _animationController;
 
         protected virtual void OnEnable()
         {
@@ -24,6 +26,16 @@ namespace RPGGame
             if (_refAnimator == null)
             {
                 _refAnimator = GetComponent<Animator>();
+            }
+
+            if (_manager == null)
+            {
+                _manager = GetComponent<PlayerStateManager>();
+            }
+
+            if (_animationController == null)
+            {
+                _animationController = GetComponentInChildren<PlayerAnimationController>();
             }
         }
 

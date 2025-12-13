@@ -11,12 +11,24 @@ namespace RPGGame
             None = -1,
             Idle,
             Move,
+            Jump,
             Length,
         }
 
         [SerializeField] private EState _state = EState.None;
         [SerializeField] private PlayerStateBase[] _states;
         [SerializeField] private UnityEvent<EState> _OnStateChanged;
+
+        private CharacterController _characterController;
+        public bool IsGrounded { get; private set; }
+
+        private void Awake()
+        {
+            if (_characterController == null)
+            {
+                _characterController = GetComponent<CharacterController>();
+            }
+        }
 
         private void OnEnable()
         {
@@ -25,6 +37,19 @@ namespace RPGGame
 
         private void Update()
         {
+            if (_state == EState.Jump)
+            {
+                return;
+            }
+
+            if (IsGrounded && _state == EState.Move && InputManager.IsJump)
+            {
+                IsGrounded = false;
+
+                SetState(EState.Jump);
+                return;
+            }
+
             if (InputManager.Movement == Vector2.zero)
             {
                 SetState(EState.Idle);
@@ -50,6 +75,12 @@ namespace RPGGame
             _states[(int)newState].enabled = true;
             _state = newState;
             _OnStateChanged?.Invoke(_state);
+        }
+
+
+        private void OnAnimatorMove()
+        {
+            IsGrounded = _characterController.isGrounded;
         }
     }
 }
